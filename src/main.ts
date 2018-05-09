@@ -1,9 +1,13 @@
 import * as telebot from "telebot";
 
 import { BotConfig } from "./config/bot.config";
+import { FrameworksConfig } from "./config/frameworks.config";
+import { ReleasesModule } from "./releases/releases";
 
 const botConfig = new BotConfig();
 const bot = new telebot(botConfig.botToken);
+const frameworksConfig = new FrameworksConfig();
+const releasesModule = new ReleasesModule();
 
 export class MainModule {
   protected frameworks = [{
@@ -36,29 +40,10 @@ export class MainModule {
     My name's @${botConfig.botName}. I can help you to stay up to date with the new versions of used libraries/frameworks. Bellow you can find a list of *available commands*:
 
     /help - show help message
-    /frameworks - get a list of frameworks`;
+    /frameworks - get a list of frameworks
+    /latestreleases - get latest releases of frameworks/libraries`;
 
     return help;
-  }
-
-  protected formatFrameworks(frmwrks: any[]): any[] {
-    const frmwrkInfoRes = [];
-
-    frmwrks.map((frmwrk) => {
-      let frmwrkInfo = "";
-
-      for (const key in frmwrk) {
-        if (frmwrk.hasOwnProperty(key)) {
-          const frmwrkName = frmwrk[key].name;
-          const frmwrkWww = frmwrk[key].www;
-          const frmwrkRepository = frmwrk[key].repository.url;
-
-          frmwrkInfoRes.push(`[${frmwrkName}](${frmwrkWww}): [${frmwrkRepository}](${frmwrkRepository})`);
-        }
-      }
-    });
-
-    return frmwrkInfoRes;
   }
 
   protected getFrameworksMessage(message: any): string {
@@ -69,7 +54,7 @@ export class MainModule {
     const info = `Hello, ${userName}!
 
     Below, you can find all frameworks whose I observe:
-    ${this.formatFrameworks(this.frameworks).join("\n")}`;
+    ${frameworksConfig.formatFrameworks.join("\n")}`;
 
     return info;
   }
@@ -90,6 +75,17 @@ export class MainModule {
     });
   }
 
+  protected onLatestReleases() {
+    bot.on("/latestreleases", (msg) => {
+      return releasesModule.latestReleaseBody
+        .then((bodyTxt) => {
+          console.log(bodyTxt);
+
+          return bot.sendMessage(msg.from.id, bodyTxt);
+        });
+    });
+  }
+
   protected start() {
     bot.start();
   }
@@ -97,6 +93,7 @@ export class MainModule {
   init() {
     this.onHelp();
     this.onFrameworks();
+    this.onLatestReleases();
 
     this.start();
   }
