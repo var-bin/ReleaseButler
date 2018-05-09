@@ -12,7 +12,7 @@ export class MainModule {
       www: "https://angular.io",
       repository: {
         type: "git",
-        url: "git+https://github.com/angular/angular.git"
+        url: "https://github.com/angular/angular.git"
       }
     },
     "react": {
@@ -20,7 +20,7 @@ export class MainModule {
       www: "https://reactjs.org",
       repository: {
         type: "git",
-        url: "git+https://github.com/facebook/react.git"
+        url: "https://github.com/facebook/react.git"
       }
     }
   }];
@@ -53,7 +53,7 @@ export class MainModule {
           const frmwrkWww = frmwrk[key].www;
           const frmwrkRepository = frmwrk[key].repository.url;
 
-          frmwrkInfoRes.push(`[${frmwrkName}](${frmwrkWww}): [${frmwrkRepository}](${frmwrkRepository.substr(4)})`);
+          frmwrkInfoRes.push(`[${frmwrkName}](${frmwrkWww}): [${frmwrkRepository}](${frmwrkRepository})`);
         }
       }
     });
