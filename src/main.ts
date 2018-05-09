@@ -79,8 +79,6 @@ export class MainModule {
     bot.on("/latestreleases", (msg) => {
       return releasesModule.latestReleaseBody
         .then((bodyTxt) => {
-          console.log(bodyTxt);
-
           return bot.sendMessage(msg.from.id, bodyTxt);
         });
     });
