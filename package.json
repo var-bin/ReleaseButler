@@ -1,0 +1,36 @@
+{
+  "name": "release-butler-bot",
+  "version": "1.0.0",
+  "description": "ReleaseButler - is a Telegram Bot which can help you to stay up to date with the new versions of used libraries/frameworks",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "ts-node index"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://var-bin@github.com/var-bin/ReleaseButler.git"
+  },
+  "keywords": [
+    "TelegramBot",
+    "Telegram",
+    "Bot",
+    "Release",
+    "TelegramBotAPI"
+  ],
+  "author": "Vitalii Rybka, @var_bincom",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/var-bin/ReleaseButler/issues"
+  },
+  "homepage": "https://github.com/var-bin/ReleaseButler#readme",
+  "dependencies": {
+    "telebot": "^1.2.6"
+  },
+  "devDependencies": {
+    "@types/node": "^10.0.4",
+    "@types/telebot": "^1.2.1",
+    "ts-node": "^6.0.2",
+    "typescript": "^2.8.3"
+  }
+}
