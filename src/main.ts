@@ -59,8 +59,8 @@ export class MainModule {
     return info;
   }
 
-  protected onHelp() {
-    bot.on("/help", (msg) => {
+  protected onHelp(command: string) {
+    bot.on(command, (msg) => {
       return bot.sendMessage(msg.from.id, this.getHelpMessage(msg), {
         parseMode: "Markdown"
       });
@@ -82,12 +82,17 @@ export class MainModule {
     });
   }
 
+  protected onStart() {
+    this.onHelp("/start");
+  }
+
   protected start() {
     bot.start();
   }
 
   init() {
-    this.onHelp();
+    this.onStart();
+    this.onHelp("/help");
     this.onFrameworks();
     this.onLatestReleases();
 
