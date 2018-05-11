@@ -78,9 +78,7 @@ export class MainModule {
   protected onLatestReleases() {
     bot.on("/latestreleases", (msg) => {
       return releasesModule.latestReleaseBody
-        .then((bodyTxt) => {
-          return bot.sendMessage(msg.from.id, bodyTxt);
-        });
+        .then((text) => bot.sendMessage(msg.from.id, text));
     });
   }
 
