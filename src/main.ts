@@ -1,4 +1,6 @@
 import * as telebot from "telebot";
+import * as path from "path";
+import * as fs from "fs";
 
 import { BotConfig } from "./config/bot.config";
 import { FrameworksConfig } from "./config/frameworks.config";
@@ -78,7 +80,7 @@ export class MainModule {
   protected onLatestReleases() {
     bot.on("/latestreleases", (msg) => {
       return releasesModule.latestReleaseBody
-        .then((text) => bot.sendMessage(msg.from.id, text));
+        .then((text) => bot.sendPhoto(msg.from.id, fs.readFileSync(path.resolve("./src/assets/images/1526327095455.png"), {encoding: "utf-8"})));
     });
   }
 
