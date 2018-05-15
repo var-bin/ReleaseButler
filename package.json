@@ -26,6 +26,8 @@
   "homepage": "https://github.com/var-bin/ReleaseButler#readme",
   "dependencies": {
     "@octokit/rest": "^15.4.0",
+    "form-data": "^2.3.2",
+    "request": "^2.86.0",
     "telebot": "^1.2.6"
   },
   "devDependencies": {
