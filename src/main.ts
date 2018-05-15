@@ -1,6 +1,8 @@
 import * as telebot from "telebot";
 import * as path from "path";
 import * as fs from "fs";
+const FormData = require("form-data");
+const request = require("request");
 
 import { BotConfig } from "./config/bot.config";
 import { FrameworksConfig } from "./config/frameworks.config";
@@ -10,6 +12,7 @@ const botConfig = new BotConfig();
 const bot = new telebot(botConfig.botToken);
 const frameworksConfig = new FrameworksConfig();
 const releasesModule = new ReleasesModule();
+const formData = new FormData();
 
 export class MainModule {
   protected frameworks = [{
@@ -79,8 +82,29 @@ export class MainModule {
 
   protected onLatestReleases() {
     bot.on("/latestreleases", (msg) => {
+      const sendPhotoUrl = `https://api.telegram.org/bot${botConfig.botToken}/sendPhoto`;
+      const formData = {
+        chat_id: msg.from.id,
+        // replace with dynamical filename
+        photo: fs.createReadStream("./src/assets/images/1526327095455.png")
+      };
+
       return releasesModule.latestReleaseBody
-        .then((text) => bot.sendPhoto(msg.from.id, fs.readFileSync(path.resolve("./src/assets/images/1526327095455.png"), {encoding: "utf-8"})));
+        .then((text) => {
+          // need to use request.post for simulating multipart/form-data submitting
+          // https://core.telegram.org/bots/api#sending-files
+          // replace request module -> form-data module because of less dependencies
+          request.post({
+            url: sendPhotoUrl,
+            formData: formData
+          }, (err, httpResponse, body) => {
+            if (err) {
+              return console.error("Upload failed: ", err);
+            }
+
+            console.log("Upload successful! Server responded with: ", body);
+          });
+        });
     });
   }
 
