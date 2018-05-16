@@ -90,10 +90,14 @@ export class MainModule {
       };
 
       return releasesModule.latestReleaseBody
-        .then((text) => {
+        .then((text: any) => {
           // need to use request.post for simulating multipart/form-data submitting
           // https://core.telegram.org/bots/api#sending-files
           // replace request module -> form-data module because of less dependencies
+
+          // text.html_url
+          // need to use https://blog.github.com/2011-11-10-git-io-github-url-shortener/ for shorting url
+          formData["caption"] = `For more info, please, follow this link: ${text.html_url}`;
           request.post({
             url: sendPhotoUrl,
             formData: formData
