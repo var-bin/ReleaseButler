@@ -15,14 +15,16 @@ export class ReleasesModule {
 
   constructor() {
     this.latestReleaseBody
-      .then(text => {
+      .then((text: any) => {
         octokit.misc.renderMarkdown({
-          text
+          text: text.body
         })
           .then(renderValue => {
             // for testing reasons
             /* console.log("renderMarkdown: \n", renderValue.data);
             fs.writeFileSync("index.html", `<div class="release-holder">` + renderValue.data + `</div>`, { encoding: "utf-8"}); */
+
+            console.log(renderValue.data);
 
             (async () => {
               const browser = await puppeteer.launch();
@@ -56,8 +58,8 @@ export class ReleasesModule {
     }).then(result => result);
   }
 
-  get latestReleaseBody() {
+  get latestReleaseBody(): Promise<octokit_rest.AnyResponse> {
     return this.latestRelease
-      .then(data => data.data.body);
+      .then(data => data.data);
   }
 }
