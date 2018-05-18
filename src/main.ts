@@ -98,6 +98,7 @@ export class MainModule {
           // text.html_url
           // need to use https://blog.github.com/2011-11-10-git-io-github-url-shortener/ for shorting url
           formData["caption"] = `For more info, please, follow this link: ${text.html_url}`;
+
           request.post({
             url: sendPhotoUrl,
             formData: formData
