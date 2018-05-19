@@ -1,8 +1,9 @@
 import * as telebot from "telebot";
-import * as path from "path";
-import * as fs from "fs";
+import * as octokit_rest from "@octokit/rest";
+
 const FormData = require("form-data");
 const request = require("request");
+const octokit: octokit_rest = require("@octokit/rest")();
 
 import { BotConfig } from "./config/bot.config";
 import { FrameworksConfig } from "./config/frameworks.config";
@@ -13,6 +14,9 @@ const bot = new telebot(botConfig.botToken);
 const frameworksConfig = new FrameworksConfig();
 const releasesModule = new ReleasesModule();
 const formData = new FormData();
+
+import { Screenshots } from "./screenshots/screenshots";
+const screenshots = new Screenshots();
 
 export class MainModule {
   protected frameworks = [{
@@ -82,32 +86,43 @@ export class MainModule {
 
   protected onLatestReleases() {
     bot.on("/latestreleases", (msg) => {
-      const sendPhotoUrl = `https://api.telegram.org/bot${botConfig.botToken}/sendPhoto`;
-      const formData = {
-        chat_id: msg.from.id,
-        // replace with dynamical filename
-        photo: fs.createReadStream("./src/assets/images/1526327095455.png")
-      };
+      bot.sendMessage(msg.from.id, "Please wait, I'm dealing with the latest release");
 
       return releasesModule.latestReleaseBody
         .then((text: any) => {
-          // need to use request.post for simulating multipart/form-data submitting
-          // https://core.telegram.org/bots/api#sending-files
-          // replace request module -> form-data module because of less dependencies
+          const sendPhotoUrl = `https://api.telegram.org/bot${botConfig.botToken}/sendPhoto`;
+          const formData = {
+            chat_id: msg.from.id
+          };
+          // need
+          octokit.misc.renderMarkdown({
+            text: text.body
+          }).then(renderValue => {
+            screenshots.makeScreenshot(renderValue.data)
+              .then(id => {
+                return screenshots.createReadStream(id);
+              })
+              .then((photoReadStream) => {
+                formData["photo"] = photoReadStream;
+                // text.html_url
+                // need to use https://blog.github.com/2011-11-10-git-io-github-url-shortener/ for shorting url
+                formData["caption"] = `For more info, please, follow this link: ${text.html_url}`;
 
-          // text.html_url
-          // need to use https://blog.github.com/2011-11-10-git-io-github-url-shortener/ for shorting url
-          formData["caption"] = `For more info, please, follow this link: ${text.html_url}`;
+                // need to use request.post for simulating multipart/form-data submitting
+                // https://core.telegram.org/bots/api#sending-files
+                // replace request module -> form-data module because of less dependencies
+                request.post({
+                  url: sendPhotoUrl,
+                  formData: formData
+                }, (err, httpResponse, body) => {
+                  if (err) {
+                    return console.error("Upload failed: ", err);
+                  }
 
-          request.post({
-            url: sendPhotoUrl,
-            formData: formData
-          }, (err, httpResponse, body) => {
-            if (err) {
-              return console.error("Upload failed: ", err);
-            }
-
-            console.log("Upload successful! Server responded with: ", body);
+                  console.log("Upload successful! Server responded with: ", body);
+                });
+              })
+              .catch(err => console.error("Ooops: ", err));
           });
         });
     });
