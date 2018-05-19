@@ -100,7 +100,7 @@ export class MainModule {
           }).then(renderValue => {
             screenshots.makeScreenshot(renderValue.data)
               .then(id => {
-                return screenshots.createReadStream(id);
+                return screenshots.getScreenshot(id);
               })
               .then((photoReadStream) => {
                 formData["photo"] = photoReadStream;
