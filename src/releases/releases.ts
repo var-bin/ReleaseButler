@@ -12,17 +12,7 @@ export class ReleasesModule {
   owner = frameworksConfig.getFrameworkOwner("react");
   repo = frameworksConfig.getFrameworkName("react");
 
-  constructor() {
-    this.latestReleaseBody
-      .then((text: any) => {
-        octokit.misc.renderMarkdown({
-          text: text.body
-        })
-        .then(renderValue => {
-          screenshots.makeScreenshot(renderValue.data);
-        });
-      });
-  }
+  constructor() { }
 
   get latestRelease() {
     return octokit.repos.getLatestRelease({
