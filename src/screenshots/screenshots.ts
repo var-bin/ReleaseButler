@@ -1,5 +1,6 @@
 import * as puppeteer from "puppeteer";
 import * as path from "path";
+import * as fs from "fs";
 
 export class Screenshots {
   public styles = {
@@ -13,10 +14,10 @@ export class Screenshots {
 
   constructor() { }
 
-  async makeScreenshot(screenshotData: string): Promise<void> {
+  async makeScreenshot(screenshotData: string): Promise<number> {
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
-    const pageContent = `<div class="release-holder">${this.ID}\n${screenshotData}</div>`;
+    const pageContent = `<div class="release-holder">${screenshotData}</div>`;
 
     await page.setContent(pageContent);
     await page.addStyleTag({
@@ -31,9 +32,17 @@ export class Screenshots {
     });
 
     await browser.close();
+
+    return this.ID;
   }
 
-  get screenshotId(): number {
-    return this.ID;
+  getScreenshot(id: number): Promise<fs.ReadStream> {
+    return new Promise((resolve, reject) => {
+      if (!id) {
+        reject("Ooop...");
+      }
+
+      resolve(fs.createReadStream(path.join(this.SCREENSHOT_PATH, `${id}.png`)));
+    });
   }
 }
