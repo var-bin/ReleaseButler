@@ -5,8 +5,8 @@ import { FrameworksConfig } from "../config/frameworks.config";
 
 const frameworksConfig = new FrameworksConfig();
 
-import { Screenshots } from "../screenshots/screenshots";
-const screenshots = new Screenshots();
+import { ScreenshotsModule } from "../screenshots/screenshots";
+const screenshots = new ScreenshotsModule();
 
 export class ReleasesModule {
   owner = frameworksConfig.getFrameworkOwner("react");
