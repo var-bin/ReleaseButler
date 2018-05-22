@@ -2,8 +2,8 @@ import * as puppeteer from "puppeteer";
 import * as path from "path";
 import * as fs from "fs";
 
-export class Screenshots {
-  public styles = {
+export class ScreenshotsModule {
+  styles = {
     material: path.resolve("src/assets/css/material.min.css"),
     mainStyles: path.resolve("src/assets/css/styles.css")
   };

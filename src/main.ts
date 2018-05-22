@@ -15,8 +15,8 @@ const frameworksConfig = new FrameworksConfig();
 const releasesModule = new ReleasesModule();
 const formData = new FormData();
 
-import { Screenshots } from "./screenshots/screenshots";
-const screenshots = new Screenshots();
+import { ScreenshotsModule } from "./screenshots/screenshots";
+const screenshots = new ScreenshotsModule();
 
 export class MainModule {
   protected frameworks = [{
