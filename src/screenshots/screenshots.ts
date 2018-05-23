@@ -15,7 +15,12 @@ export class ScreenshotsModule {
   constructor() { }
 
   async makeScreenshot(screenshotData: string): Promise<number> {
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({
+      args: [
+        "--no-sandbox",
+        "--disable-setuid-sandbox"
+      ]
+    });
     const page = await browser.newPage();
     const pageContent = `<div class="release-holder">${screenshotData}</div>`;
 
